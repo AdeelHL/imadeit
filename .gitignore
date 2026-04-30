@@ -40,5 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# claude code (local-only — committed settings.json is fine; .local.json is per-machine)
-.claude/settings.local.json
+# local AI tooling
+.claude/
+CLAUDE.md
+AGENTS.md
