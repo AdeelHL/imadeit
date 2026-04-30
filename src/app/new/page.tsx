@@ -3,7 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { db } from "@/lib/db/client";
 import { tags as tagsTable } from "@/lib/db/schema";
 import { asc } from "drizzle-orm";
-import { NewPostForm } from "./NewPostForm";
+import { PostForm } from "@/components/PostForm";
+import { createPost } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -42,7 +43,12 @@ export default async function NewPostPage({
         ) : null}
 
         <div className="mt-8">
-          <NewPostForm userId={user.id} availableTags={allTags} />
+          <PostForm
+            mode="create"
+            userId={user.id}
+            availableTags={allTags}
+            action={createPost}
+          />
         </div>
       </div>
     </main>

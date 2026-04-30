@@ -16,10 +16,9 @@ export async function updateProfile(formData: FormData) {
   const bio = String(formData.get("bio") ?? "").trim();
 
   if (!/^[a-zA-Z0-9_]{2,30}$/.test(username)) {
-    redirect("/settings?error=invalid-username");
+    redirect("/dashboard/settings?error=invalid-username");
   }
 
-  // RLS allows the user to update their own profile only.
   const { error } = await supabase
     .from("profiles")
     .update({
@@ -30,9 +29,9 @@ export async function updateProfile(formData: FormData) {
     .eq("id", user.id);
 
   if (error) {
-    redirect(`/settings?error=${encodeURIComponent(error.message)}`);
+    redirect(`/dashboard/settings?error=${encodeURIComponent(error.message)}`);
   }
-  revalidatePath("/settings");
+  revalidatePath("/dashboard/settings");
   revalidatePath("/");
-  redirect("/settings?saved=1");
+  redirect("/dashboard/settings?saved=1");
 }

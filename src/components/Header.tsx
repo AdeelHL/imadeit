@@ -49,10 +49,10 @@ export async function Header() {
                 + New post
               </Link>
               <Link
-                href="/settings"
+                href="/dashboard"
                 className="text-stone-700 hover:text-stone-900 dark:text-stone-300 dark:hover:text-stone-50"
               >
-                {username ? `@${username}` : "settings"}
+                {username ? `@${username}` : "dashboard"}
               </Link>
               <form action={signOut}>
                 <button
