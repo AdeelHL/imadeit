@@ -70,7 +70,7 @@ export function ProjectRow({
 
       <div className="flex shrink-0 items-center gap-2">
         <Link
-          href={`/dashboard/posts/${post.id}/edit`}
+          href={`/dashboard/projects/${post.id}/edit`}
           className="rounded-md border border-stone-300 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 hover:bg-stone-100 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300 dark:hover:bg-stone-800"
         >
           Edit
