@@ -3,6 +3,7 @@
 import { useRef, useState, useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { TagPicker, type TagOption } from "@/components/TagChips";
+import { MarkdownCheatsheet } from "@/components/MarkdownCheatsheet";
 
 export type ProjectFormInitial = {
   title: string;
@@ -40,9 +41,50 @@ export function ProjectForm({
   const [body, setBody] = useState(initial?.bodyMd ?? "");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const [bodyFocusTick, setBodyFocusTick] = useState(0);
 
   const bodyRef = useRef<HTMLTextAreaElement | null>(null);
   const inlineFileRef = useRef<HTMLInputElement | null>(null);
+
+  /**
+   * Insert a snippet at the current cursor position in the body textarea.
+   * If the snippet contains the literal token "<SEL>", the caret will land
+   * where that token was; otherwise it lands at the end of the inserted text.
+   * If `selectInside` is true, the surrounded selection (or empty selection)
+   * is highlighted at the <SEL> position so the user can immediately type
+   * over the placeholder.
+   */
+  function insertAtCursor(rawSnippet: string) {
+    const ta = bodyRef.current;
+    const selToken = "<SEL>";
+    const tokenIndex = rawSnippet.indexOf(selToken);
+    const text = rawSnippet.replace(selToken, "");
+
+    const start = ta?.selectionStart ?? body.length;
+    const end = ta?.selectionEnd ?? body.length;
+    const selected = body.slice(start, end);
+
+    // If the user had text selected and the snippet has a slot, wrap it
+    const finalText = selected && tokenIndex >= 0
+      ? rawSnippet.replace(selToken, selected)
+      : text;
+
+    const next = body.slice(0, start) + finalText + body.slice(end);
+    setBody(next);
+
+    requestAnimationFrame(() => {
+      const t = bodyRef.current;
+      if (!t) return;
+      t.focus();
+      let caret: number;
+      if (tokenIndex >= 0 && !selected) {
+        caret = start + tokenIndex;
+      } else {
+        caret = start + finalText.length;
+      }
+      t.setSelectionRange(caret, caret);
+    });
+  }
 
   async function uploadFile(
     file: File
@@ -201,13 +243,15 @@ export function ProjectForm({
           required
           value={body}
           onChange={(e) => setBody(e.target.value)}
+          onFocus={() => setBodyFocusTick((t) => t + 1)}
           className="mt-1 block w-full rounded-md border border-stone-300 bg-white px-3 py-2 font-mono text-sm text-stone-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-50"
           placeholder={"# How I built this\n\nTell the story behind your work — materials, process, what you'd do differently…"}
         />
         <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">
-          Markdown supported. Headings (#), **bold**, *italic*, lists, links,
-          code. The image button uploads and pastes a Markdown image where your
-          cursor is.
+          Markdown supported — bold, italics, headings, lists, links, code.
+          Open the <span className="font-medium">Markdown</span> tab on the
+          right of the screen for a clickable cheat sheet that drops syntax
+          straight into the body.
         </p>
       </div>
 
@@ -296,6 +340,11 @@ export function ProjectForm({
         </button>
         {/* Visibility is now picked above; no implicit-public caption needed. */}
       </div>
+
+      <MarkdownCheatsheet
+        onInsert={insertAtCursor}
+        triggerOpenSignal={bodyFocusTick}
+      />
     </form>
   );
 }
