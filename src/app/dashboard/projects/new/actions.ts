@@ -19,6 +19,15 @@ export async function createProject(formData: FormData) {
   const bodyMd = String(formData.get("body_md") ?? "").trim();
   const coverImage = String(formData.get("cover_image") ?? "").trim();
   const tagsRaw = String(formData.get("tags") ?? "").trim();
+  const rawStatus = String(formData.get("status") ?? "published");
+  const status: "published" | "unlisted" | "draft" =
+    rawStatus === "draft"
+      ? "draft"
+      : rawStatus === "unlisted"
+        ? "unlisted"
+        : "published";
+  // Unchecked checkboxes are absent from FormData entirely.
+  const commentsEnabled = formData.get("comments_enabled") !== null;
 
   if (!title || title.length > 120) {
     redirect("/dashboard/projects/new?error=invalid-title");
@@ -53,6 +62,8 @@ export async function createProject(formData: FormData) {
       title,
       cover_image: coverImage,
       body_md: bodyMd,
+      status,
+      comments_enabled: commentsEnabled,
     })
     .select("id, slug")
     .single();
