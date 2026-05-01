@@ -2,7 +2,7 @@ import Link from "next/link";
 import { db } from "@/lib/db/client";
 import { posts, profiles, tags as tagsTable } from "@/lib/db/schema";
 import { asc, desc, eq } from "drizzle-orm";
-import { PostCard } from "@/components/PostCard";
+import { ProjectCard } from "@/components/ProjectCard";
 import { postMediaUrl } from "@/lib/storage";
 
 export const dynamic = "force-dynamic";
@@ -48,7 +48,7 @@ export default async function Home() {
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Link
-              href="/new"
+              href="/dashboard/projects/new"
               className="rounded-md bg-stone-900 px-5 py-2.5 text-sm font-semibold text-stone-50 hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-200"
             >
               Share something you made
@@ -92,8 +92,8 @@ export default async function Home() {
         <div className="mx-auto max-w-5xl">
           {rows.length === 0 ? (
             <div className="rounded-lg border border-dashed border-stone-300 p-12 text-center text-stone-600 dark:border-stone-700 dark:text-stone-400">
-              No posts yet.{" "}
-              <Link href="/new" className="font-medium text-brand-600 underline dark:text-brand-300">
+              No projects yet.{" "}
+              <Link href="/dashboard/projects/new" className="font-medium text-brand-600 underline dark:text-brand-300">
                 Be the first to publish one
               </Link>
               .
@@ -102,7 +102,7 @@ export default async function Home() {
             <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
               {rows.map((p) => (
                 <li key={p.id}>
-                  <PostCard
+                  <ProjectCard
                     href={`/u/${p.authorUsername}/${p.slug}`}
                     coverUrl={postMediaUrl(p.coverImage)}
                     title={p.title}

@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { db } from "@/lib/db/client";
 import { posts, profiles } from "@/lib/db/schema";
 import { desc, eq } from "drizzle-orm";
-import { PostRow } from "./PostRow";
+import { ProjectRow } from "./ProjectRow";
 
 export const dynamic = "force-dynamic";
 
@@ -50,7 +50,7 @@ export default async function MyPostsPage({
         <div className="flex items-end justify-between">
           <div>
             <h1 className="font-serif text-3xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">
-              My posts
+              My projects
             </h1>
             <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">
               {myPosts.length} total · {published} published · {drafts} draft
@@ -58,16 +58,16 @@ export default async function MyPostsPage({
             </p>
           </div>
           <Link
-            href="/new"
+            href="/dashboard/projects/new"
             className="rounded-md bg-stone-900 px-4 py-2 text-sm font-medium text-stone-50 hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-200"
           >
-            + New post
+            + New project
           </Link>
         </div>
 
         {sp.deleted ? (
           <p className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200">
-            Post deleted.
+            Project deleted.
           </p>
         ) : null}
         {sp.error ? (
@@ -78,16 +78,16 @@ export default async function MyPostsPage({
 
         {myPosts.length === 0 ? (
           <div className="mt-10 rounded-lg border border-dashed border-stone-300 p-12 text-center text-stone-600 dark:border-stone-700 dark:text-stone-400">
-            You haven&apos;t posted anything yet.{" "}
-            <Link href="/new" className="font-medium text-brand-600 underline dark:text-brand-300">
-              Share your first piece
+            You haven&apos;t shared any projects yet.{" "}
+            <Link href="/dashboard/projects/new" className="font-medium text-brand-600 underline dark:text-brand-300">
+              Share your first one
             </Link>
             .
           </div>
         ) : (
           <ul className="mt-8 space-y-3">
             {myPosts.map((p) => (
-              <PostRow
+              <ProjectRow
                 key={p.id}
                 post={p}
                 authorUsername={profile?.username ?? ""}

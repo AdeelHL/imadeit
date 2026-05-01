@@ -9,9 +9,9 @@ import {
   tags as tagsTable,
 } from "@/lib/db/schema";
 import { and, asc, eq } from "drizzle-orm";
-import { PostForm } from "@/components/PostForm";
+import { ProjectForm } from "@/components/ProjectForm";
 import { postMediaUrl } from "@/lib/storage";
-import { updatePost } from "./actions";
+import { updateProject } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -57,14 +57,14 @@ export default async function EditPostPage({
       .where(eq(postTags.postId, post.id)),
   ]);
 
-  const action = updatePost.bind(null, post.id);
+  const action = updateProject.bind(null, post.id);
 
   return (
     <main className="px-6 py-10">
       <div className="mx-auto max-w-2xl">
         <div className="flex items-center justify-between">
           <h1 className="font-serif text-3xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">
-            Edit post
+            Edit project
           </h1>
           {profile ? (
             <Link
@@ -88,7 +88,7 @@ export default async function EditPostPage({
         ) : null}
 
         <div className="mt-8">
-          <PostForm
+          <ProjectForm
             mode="edit"
             userId={user.id}
             availableTags={allTags}

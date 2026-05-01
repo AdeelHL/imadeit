@@ -8,7 +8,7 @@ import { profiles, posts, tags as tagsTable } from "@/lib/db/schema";
 import { eq, inArray } from "drizzle-orm";
 import { parseTags } from "@/lib/slug";
 
-export async function updatePost(postId: string, formData: FormData) {
+export async function updateProject(postId: string, formData: FormData) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -30,13 +30,13 @@ export async function updatePost(postId: string, formData: FormData) {
   const commentsEnabled = formData.get("comments_enabled") !== null;
 
   if (!title || title.length > 120) {
-    redirect(`/dashboard/posts/${postId}/edit?error=invalid-title`);
+    redirect(`/dashboard/projects/${postId}/edit?error=invalid-title`);
   }
   if (!bodyMd) {
-    redirect(`/dashboard/posts/${postId}/edit?error=missing-body`);
+    redirect(`/dashboard/projects/${postId}/edit?error=missing-body`);
   }
   if (!coverImage) {
-    redirect(`/dashboard/posts/${postId}/edit?error=missing-cover`);
+    redirect(`/dashboard/projects/${postId}/edit?error=missing-cover`);
   }
 
   // Update via Supabase JS so RLS validates ownership at the DB layer.
@@ -53,7 +53,7 @@ export async function updatePost(postId: string, formData: FormData) {
 
   if (updErr) {
     redirect(
-      `/dashboard/posts/${postId}/edit?error=${encodeURIComponent(updErr.message)}`
+      `/dashboard/projects/${postId}/edit?error=${encodeURIComponent(updErr.message)}`
     );
   }
 
@@ -65,7 +65,7 @@ export async function updatePost(postId: string, formData: FormData) {
     .eq("post_id", postId);
   if (delTagsErr) {
     redirect(
-      `/dashboard/posts/${postId}/edit?error=${encodeURIComponent(delTagsErr.message)}`
+      `/dashboard/projects/${postId}/edit?error=${encodeURIComponent(delTagsErr.message)}`
     );
   }
 
@@ -84,7 +84,7 @@ export async function updatePost(postId: string, formData: FormData) {
       );
       if (insTagsErr) {
         redirect(
-          `/dashboard/posts/${postId}/edit?error=${encodeURIComponent(insTagsErr.message)}`
+          `/dashboard/projects/${postId}/edit?error=${encodeURIComponent(insTagsErr.message)}`
         );
       }
     }
@@ -103,11 +103,11 @@ export async function updatePost(postId: string, formData: FormData) {
     .limit(1);
 
   revalidatePath("/");
-  revalidatePath("/dashboard/posts");
+  revalidatePath("/dashboard/projects");
   if (profile && post) {
     revalidatePath(`/u/${profile.username}/${post.slug}`);
     revalidatePath(`/u/${profile.username}`);
   }
 
-  redirect(`/dashboard/posts/${postId}/edit?saved=1`);
+  redirect(`/dashboard/projects/${postId}/edit?saved=1`);
 }

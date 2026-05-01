@@ -13,14 +13,14 @@ type Item = {
 
 const ITEMS: Item[] = [
   {
-    href: "/dashboard/posts",
-    label: "My posts",
+    href: "/dashboard/projects",
+    label: "My projects",
     icon: <IconGrid />,
     matchPrefix: true,
   },
   {
-    href: "/new",
-    label: "New post",
+    href: "/dashboard/projects/new",
+    label: "New project",
     icon: <IconPlus />,
   },
   {

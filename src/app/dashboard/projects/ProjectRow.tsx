@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { useTransition } from "react";
-import { deletePost } from "./actions";
+import { deleteProject } from "./actions";
 import { postMediaUrl } from "@/lib/storage";
 
-export function PostRow({
+export function ProjectRow({
   post,
   authorUsername,
 }: {
@@ -25,13 +25,13 @@ export function PostRow({
   function onDelete() {
     if (
       !confirm(
-        `Delete "${post.title}"? This permanently removes the post, its tags, and any comments.`
+        `Delete "${post.title}"? This permanently removes the project, its tags, and any comments.`
       )
     ) {
       return;
     }
     startTransition(() => {
-      deletePost(post.id);
+      deleteProject(post.id);
     });
   }
 

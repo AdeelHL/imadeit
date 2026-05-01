@@ -30,10 +30,10 @@ export function Header({
           {isSignedIn ? (
             <>
               <Link
-                href="/new"
+                href="/dashboard/projects/new"
                 className="hidden rounded-md bg-stone-900 px-3 py-1.5 text-sm font-medium text-stone-50 hover:bg-stone-800 sm:inline-block dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-200"
               >
-                + New post
+                + New project
               </Link>
               <Link
                 href="/dashboard"

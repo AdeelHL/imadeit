@@ -8,7 +8,7 @@ import { posts } from "@/lib/db/schema";
 import { and, eq } from "drizzle-orm";
 import { extractMediaPaths } from "@/lib/extractMediaPaths";
 
-export async function deletePost(postId: string) {
+export async function deleteProject(postId: string) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -25,7 +25,7 @@ export async function deletePost(postId: string) {
     .limit(1);
 
   if (!post) {
-    redirect("/dashboard/posts?error=not-found");
+    redirect("/dashboard/projects?error=not-found");
   }
 
   // RLS enforces author_id = auth.uid() on the delete itself.
@@ -35,7 +35,7 @@ export async function deletePost(postId: string) {
     .eq("id", postId);
 
   if (delErr) {
-    redirect(`/dashboard/posts?error=${encodeURIComponent(delErr.message)}`);
+    redirect(`/dashboard/projects?error=${encodeURIComponent(delErr.message)}`);
   }
 
   // Best-effort storage cleanup: cover image + every inline body image whose
@@ -55,7 +55,7 @@ export async function deletePost(postId: string) {
     // gone, and the orphan files are bounded and recoverable later.
   }
 
-  revalidatePath("/dashboard/posts");
+  revalidatePath("/dashboard/projects");
   revalidatePath("/");
-  redirect("/dashboard/posts?deleted=1");
+  redirect("/dashboard/projects?deleted=1");
 }

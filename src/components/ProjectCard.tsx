@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export function PostCard({
+export function ProjectCard({
   href,
   coverUrl,
   title,

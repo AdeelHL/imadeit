@@ -8,7 +8,7 @@ import {
   tags as tagsTable,
 } from "@/lib/db/schema";
 import { and, asc, desc, eq } from "drizzle-orm";
-import { PostCard } from "@/components/PostCard";
+import { ProjectCard } from "@/components/ProjectCard";
 import { postMediaUrl } from "@/lib/storage";
 
 export const dynamic = "force-dynamic";
@@ -97,7 +97,7 @@ export default async function TagFeedPage({
             <ul className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
               {rows.map((p) => (
                 <li key={p.id}>
-                  <PostCard
+                  <ProjectCard
                     href={`/u/${p.authorUsername}/${p.slug}`}
                     coverUrl={postMediaUrl(p.coverImage)}
                     title={p.title}

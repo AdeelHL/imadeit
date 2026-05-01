@@ -4,7 +4,7 @@ import { useRef, useState, useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { TagPicker, type TagOption } from "@/components/TagChips";
 
-export type PostFormInitial = {
+export type ProjectFormInitial = {
   title: string;
   bodyMd: string;
   coverPath: string;
@@ -14,7 +14,7 @@ export type PostFormInitial = {
   tagSlugs: string[];
 };
 
-export function PostForm({
+export function ProjectForm({
   userId,
   availableTags,
   mode,
@@ -25,7 +25,7 @@ export function PostForm({
   userId: string;
   availableTags: TagOption[];
   mode: "create" | "edit";
-  initial?: PostFormInitial;
+  initial?: ProjectFormInitial;
   action: (formData: FormData) => Promise<void>;
   submitLabel?: string;
 }) {
@@ -127,7 +127,7 @@ export function PostForm({
           Cover image
         </label>
         <p className="text-xs text-stone-500 dark:text-stone-400">
-          The hero image people see in the feed and at the top of your post.
+          The hero image people see in the feed and at the top of your project page.
         </p>
         <input
           type="file"
@@ -184,7 +184,7 @@ export function PostForm({
             disabled={bodyUploading || pending}
             className="text-xs font-medium text-brand-600 hover:text-brand-700 disabled:opacity-50 dark:text-brand-300 dark:hover:text-brand-200"
           >
-            {bodyUploading ? "Uploading…" : "+ Add image to post"}
+            {bodyUploading ? "Uploading…" : "+ Add image to project"}
           </button>
           <input
             ref={inlineFileRef}
@@ -251,7 +251,7 @@ export function PostForm({
               <option value="draft">Draft — only you can view</option>
             </select>
             <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">
-              Unlisted posts are hidden from all feeds, but anyone with the
+              Unlisted projects are hidden from all feeds, but anyone with the
               direct URL can open them.
             </p>
           </div>
@@ -299,7 +299,7 @@ export function PostForm({
         </button>
         {mode === "create" ? (
           <span className="text-xs text-stone-500 dark:text-stone-400">
-            Your post will be public.
+            Your project will be public.
           </span>
         ) : null}
       </div>

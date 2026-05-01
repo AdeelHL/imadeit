@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { db } from "@/lib/db/client";
 import { posts, profiles } from "@/lib/db/schema";
 import { and, desc, eq } from "drizzle-orm";
-import { PostCard } from "@/components/PostCard";
+import { ProjectCard } from "@/components/ProjectCard";
 import { postMediaUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
 
@@ -58,14 +58,14 @@ export default async function UserProfilePage({
         </header>
 
         {rows.length === 0 ? (
-          <p className="mt-12 text-zinc-500 dark:text-zinc-400">
-            No posts yet.
+          <p className="mt-12 text-stone-500 dark:text-stone-400">
+            No projects yet.
           </p>
         ) : (
           <ul className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
             {rows.map((p) => (
               <li key={p.id}>
-                <PostCard
+                <ProjectCard
                   href={`/u/${profile.username}/${p.slug}`}
                   coverUrl={postMediaUrl(p.coverImage)}
                   title={p.title}

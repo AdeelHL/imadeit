@@ -8,7 +8,7 @@ import { profiles, posts, tags as tagsTable, postTags } from "@/lib/db/schema";
 import { eq, and, inArray } from "drizzle-orm";
 import { parseTags, slugify } from "@/lib/slug";
 
-export async function createPost(formData: FormData) {
+export async function createProject(formData: FormData) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -21,13 +21,13 @@ export async function createPost(formData: FormData) {
   const tagsRaw = String(formData.get("tags") ?? "").trim();
 
   if (!title || title.length > 120) {
-    redirect("/new?error=invalid-title");
+    redirect("/dashboard/projects/new?error=invalid-title");
   }
   if (!bodyMd) {
-    redirect("/new?error=missing-body");
+    redirect("/dashboard/projects/new?error=missing-body");
   }
   if (!coverImage) {
-    redirect("/new?error=missing-cover");
+    redirect("/dashboard/projects/new?error=missing-cover");
   }
 
   const baseSlug = slugify(title) || "post";
@@ -59,7 +59,7 @@ export async function createPost(formData: FormData) {
 
   if (insertErr || !post) {
     redirect(
-      `/new?error=${encodeURIComponent(insertErr?.message ?? "insert-failed")}`
+      `/dashboard/projects/new?error=${encodeURIComponent(insertErr?.message ?? "insert-failed")}`
     );
   }
 
@@ -78,7 +78,7 @@ export async function createPost(formData: FormData) {
         }))
       );
       if (linkErr) {
-        redirect(`/new?error=${encodeURIComponent(linkErr.message)}`);
+        redirect(`/dashboard/projects/new?error=${encodeURIComponent(linkErr.message)}`);
       }
     }
   }
