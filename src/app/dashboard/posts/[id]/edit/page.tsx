@@ -97,7 +97,13 @@ export default async function EditPostPage({
               bodyMd: post.bodyMd,
               coverPath: post.coverImage,
               coverUrl: postMediaUrl(post.coverImage),
-              status: post.status === "draft" ? "draft" : "published",
+              status:
+                post.status === "draft"
+                  ? "draft"
+                  : post.status === "unlisted"
+                    ? "unlisted"
+                    : "published",
+              commentsEnabled: post.commentsEnabled,
               tagSlugs: postTagRows.map((r) => r.slug),
             }}
             action={action}

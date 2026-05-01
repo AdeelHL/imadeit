@@ -6,6 +6,8 @@ import { and, eq } from "drizzle-orm";
 import { Markdown } from "@/components/Markdown";
 import { postMediaUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
+import { ViewBeacon } from "@/components/ViewBeacon";
+import { Comments } from "./Comments";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +25,7 @@ export default async function PostDetailPage({
       coverImage: posts.coverImage,
       bodyMd: posts.bodyMd,
       status: posts.status,
+      commentsEnabled: posts.commentsEnabled,
       createdAt: posts.createdAt,
       viewCount: posts.viewCount,
       authorId: posts.authorId,
@@ -41,7 +44,8 @@ export default async function PostDetailPage({
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (row.status !== "published" && row.authorId !== user?.id) {
+  // Drafts are author-only; published + unlisted are accessible by direct URL.
+  if (row.status === "draft" && row.authorId !== user?.id) {
     notFound();
   }
 
@@ -88,9 +92,16 @@ export default async function PostDetailPage({
           <span>
             {row.viewCount} view{row.viewCount === 1 ? "" : "s"}
           </span>
-          {row.status !== "published" ? (
+          {row.status === "unlisted" ? (
+            <span
+              title="Hidden from feeds. Anyone with the link can view."
+              className="rounded-full bg-stone-200 px-2 py-0.5 text-xs font-medium text-stone-700 dark:bg-stone-800 dark:text-stone-200"
+            >
+              Unlisted
+            </span>
+          ) : row.status === "draft" ? (
             <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900 dark:text-amber-100">
-              {row.status}
+              Draft
             </span>
           ) : null}
         </div>
@@ -113,7 +124,19 @@ export default async function PostDetailPage({
         <div className="mt-10">
           <Markdown>{row.bodyMd}</Markdown>
         </div>
+
+        <Comments
+          postId={row.id}
+          username={username}
+          slug={slug}
+          commentsEnabled={row.commentsEnabled}
+        />
       </article>
+
+      <ViewBeacon
+        postId={row.id}
+        enabled={row.status === "published" && row.authorId !== user?.id}
+      />
     </main>
   );
 }

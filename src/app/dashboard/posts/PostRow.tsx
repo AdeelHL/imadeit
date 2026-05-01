@@ -56,6 +56,10 @@ export function PostRow({
             <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-amber-800 dark:bg-amber-900 dark:text-amber-100">
               Draft
             </span>
+          ) : post.status === "unlisted" ? (
+            <span className="rounded-full bg-stone-200 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-stone-700 dark:bg-stone-800 dark:text-stone-200">
+              Unlisted
+            </span>
           ) : null}
         </div>
         <p className="mt-0.5 text-xs text-stone-500 dark:text-stone-400">

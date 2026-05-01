@@ -1,26 +1,13 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
-import { db } from "@/lib/db/client";
-import { profiles } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
 import { signOut } from "@/app/login/actions";
 
-export async function Header() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  let username: string | null = null;
-  if (user) {
-    const [profile] = await db
-      .select({ username: profiles.username })
-      .from(profiles)
-      .where(eq(profiles.id, user.id))
-      .limit(1);
-    username = profile?.username ?? null;
-  }
-
+export function Header({
+  isSignedIn,
+  username,
+}: {
+  isSignedIn: boolean;
+  username: string | null;
+}) {
   return (
     <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-stone-50/80 backdrop-blur dark:border-stone-800/80 dark:bg-stone-950/80">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
@@ -40,7 +27,7 @@ export async function Header() {
         </Link>
 
         <div className="flex items-center gap-5 text-sm">
-          {user ? (
+          {isSignedIn ? (
             <>
               <Link
                 href="/new"

@@ -19,10 +19,15 @@ export async function updatePost(postId: string, formData: FormData) {
   const bodyMd = String(formData.get("body_md") ?? "").trim();
   const coverImage = String(formData.get("cover_image") ?? "").trim();
   const tagsRaw = String(formData.get("tags") ?? "").trim();
-  const status =
-    String(formData.get("status") ?? "published") === "draft"
+  const rawStatus = String(formData.get("status") ?? "published");
+  const status: "published" | "unlisted" | "draft" =
+    rawStatus === "draft"
       ? "draft"
-      : "published";
+      : rawStatus === "unlisted"
+        ? "unlisted"
+        : "published";
+  // Unchecked checkboxes are absent from FormData entirely.
+  const commentsEnabled = formData.get("comments_enabled") !== null;
 
   if (!title || title.length > 120) {
     redirect(`/dashboard/posts/${postId}/edit?error=invalid-title`);
@@ -42,6 +47,7 @@ export async function updatePost(postId: string, formData: FormData) {
       body_md: bodyMd,
       cover_image: coverImage,
       status,
+      comments_enabled: commentsEnabled,
     })
     .eq("id", postId);
 

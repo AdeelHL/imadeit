@@ -9,7 +9,8 @@ export type PostFormInitial = {
   bodyMd: string;
   coverPath: string;
   coverUrl: string;
-  status: "published" | "draft";
+  status: "published" | "unlisted" | "draft";
+  commentsEnabled: boolean;
   tagSlugs: string[];
 };
 
@@ -225,25 +226,57 @@ export function PostForm({
         />
       </div>
 
-      {/* Status toggle (edit mode only) */}
+      {/* Visibility + comments toggles (edit mode only) */}
       {mode === "edit" ? (
-        <div>
-          <label
-            htmlFor="status"
-            className="block text-sm font-medium text-stone-700 dark:text-stone-300"
-          >
-            Visibility
-          </label>
-          <select
-            id="status"
-            name="status"
-            defaultValue={initial?.status ?? "published"}
-            className="mt-1 block w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-50"
-          >
-            <option value="published">Published — visible to everyone</option>
-            <option value="draft">Draft — only visible to you</option>
-          </select>
-        </div>
+        <>
+          <div>
+            <label
+              htmlFor="status"
+              className="block text-sm font-medium text-stone-700 dark:text-stone-300"
+            >
+              Visibility
+            </label>
+            <select
+              id="status"
+              name="status"
+              defaultValue={initial?.status ?? "published"}
+              className="mt-1 block w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-50"
+            >
+              <option value="published">
+                Published — anyone can view, appears in feeds
+              </option>
+              <option value="unlisted">
+                Unlisted — only people with the link can view
+              </option>
+              <option value="draft">Draft — only you can view</option>
+            </select>
+            <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">
+              Unlisted posts are hidden from all feeds, but anyone with the
+              direct URL can open them.
+            </p>
+          </div>
+
+          <div>
+            <label className="flex cursor-pointer items-start gap-3">
+              <input
+                type="checkbox"
+                name="comments_enabled"
+                value="1"
+                defaultChecked={initial?.commentsEnabled ?? true}
+                className="mt-0.5 h-4 w-4 rounded border-stone-300 text-brand-500 focus:ring-brand-500 dark:border-stone-700 dark:bg-stone-900"
+              />
+              <span>
+                <span className="block text-sm font-medium text-stone-700 dark:text-stone-300">
+                  Allow comments
+                </span>
+                <span className="block text-xs text-stone-500 dark:text-stone-400">
+                  Existing comments stay visible if you turn this off — only
+                  new ones are blocked.
+                </span>
+              </span>
+            </label>
+          </div>
+        </>
       ) : null}
 
       {error ? (

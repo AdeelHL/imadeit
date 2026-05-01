@@ -7,6 +7,7 @@ import {
   integer,
   serial,
   date,
+  boolean,
   primaryKey,
   uniqueIndex,
   index,
@@ -43,6 +44,7 @@ export const posts = pgTable(
     coverImage: text("cover_image").notNull(),
     bodyMd: text("body_md").notNull(),
     status: text("status").notNull().default("published"),
+    commentsEnabled: boolean("comments_enabled").notNull().default(true),
     viewCount: integer("view_count").notNull().default(0),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
